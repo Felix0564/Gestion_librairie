@@ -1,0 +1,42 @@
+{% extends 'librairie/base.html' %}
+
+{% block content %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h2 class="card-title">Emprunter "{{ livre.titre_livre }}"</h2>
+        <p>Date de récupération :  {{ date_recuperation }}</h4></p>
+        <p>Date de retour prévue:  {{ date_retour_prevue }}</p> 
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Confirmer l'emprunt</button>
+        </form>
+        <a href="{% url 'detail_livre' livre.id_livre %}" class="btn btn-secondary mt-2">Annuler</a>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+{% comment %} {% extends 'librairie/base.html' %}
+<h2>Emprunter le livre : {{ livre.titre_livre }}</h2>
+
+
+
+{% block content %}
+
+<div class="card mb-3">
+<p>Date de récupération : {{emprunt.date_recuperation }}</p>
+<p>Date de retour prévue : {{emprunt.date_retour_prevue }}</p>
+    <div class="card-body">
+        <h2 class="card-title">Emprunter "{{ livre.titre_livre }}"</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Confirmer l'emprunt</button>
+        </form>
+        <a href="{% url 'detail_livre' livre.id_livre %}" class="btn btn-secondary mt-2">Annuler</a>
+    </div>
+</div>
+{% endblock %} {% endcomment %}

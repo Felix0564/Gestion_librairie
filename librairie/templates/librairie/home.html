@@ -1,0 +1,115 @@
+{% extends 'librairie/base.html' %}
+{% load static %}
+
+<style>
+    body {
+        background-image: url("{% static 'images/couverture3.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    
+    .content-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+
+    .card {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+</style>
+
+{% block content %}
+<div class="content-container">
+    <h1 class="mb-4">BIENVENUE A LA BIBLIOTHEQUE SCOLAIRE</h1>
+    
+    <form method="get" action="{% url 'search' %}" class="mb-4">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Rechercher un livre par titre ou auteur" name="q">
+            <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
+        </div>
+    </form>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for livre in livres %}
+        <div class="col">
+            <div class="card h-100">
+                {% if livre.image_couverture_livre %}
+                <img src="{{ livre.image_couverture_livre.url }}" class="card-img-top" alt="{{ livre.titre_livre }}">
+                {% else %}
+                <img src="https://via.placeholder.com/300x200?text=Pas+d'image" class="card-img-top" alt="Pas d'image">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ livre.titre_livre }}</h5>
+                    <p class="card-text">Auteur: {{ livre.auteur_livre }}</p>
+                    <p class="card-text">Date de publication: {{ livre.date_publication_livre }}</p>
+                    <p class="card-text">Exemplaires disponibles: {{ livre.nombre_exemplaire }}</p>
+                </div>
+                <div class="card-footer">
+                    {% if livre.etat_livre %}
+                    <a href="{% url 'detail_livre' livre.id_livre %}" class="btn btn-primary">Voir détails</a>
+                    {% else %}
+                    <button class="btn btn-secondary" disabled>Indisponible</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center">Aucun livre disponible pour le moment.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+{% comment %} {% extends 'librairie/base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Bibliothèque</h1>
+<form method="get" action="{% url 'search' %}" class="mb-4">
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="Rechercher un livre par titre ou auteur" name="q">
+        <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
+    </div>
+</form>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for livre in livres %}
+    <div class="col">
+        <div class="card h-100">
+            {% if livre.image_couverture_livre %}
+            <img src="{{ livre.image_couverture_livre.url }}" class="card-img-top" alt="{{ livre.titre_livre }}">
+            {% else %}
+            <img src="https://via.placeholder.com/300x200?text=Pas+d'image" class="card-img-top" alt="Pas d'image">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ livre.titre_livre }}</h5>
+                <p class="card-text">Auteur: {{ livre.auteur_livre }}</p>
+                <p class="card-text">Date de publication: {{ livre.date_publication_livre }}</p>
+                <p class="card-text">Exemplaires disponibles: {{ livre.nombre_exemplaire }}</p>
+            </div>
+            <div class="card-footer">
+                {% if livre.etat_livre %}
+                <a href="{% url 'detail_livre' livre.id_livre %}" class="btn btn-primary">Voir détails</a>
+                {% else %}
+                <button class="btn btn-secondary" disabled>Indisponible</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p class="text-center">Aucun livre disponible pour le moment.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} {% endcomment %}

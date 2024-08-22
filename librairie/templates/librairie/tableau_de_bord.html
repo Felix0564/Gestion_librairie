@@ -1,0 +1,153 @@
+{% extends 'librairie/base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Tableau de bord du réceptionniste</h1>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Total des livres</h5>
+                <p class="card-text display-4">{{ total_livres }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Total des emprunts</h5>
+                <p class="card-text display-4">{{ total_emprunts }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h5 class="card-title">Emprunts en retard</h5>
+                <p class="card-text display-4">{{ emprunts_en_retard }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Statistiques des emprunts</h5>
+                <select id="chartSelector" class="form-select mb-3">
+                    <option value="empruntsMois">Emprunts par mois</option>
+                    <option value="livresEmpruntes">Livres les plus/moins empruntés</option>
+                </select>
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Jauge des emprunts</h5>
+                <canvas id="gaugeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var pieCtx = document.getElementById('pieChart').getContext('2d');
+    var gaugeCtx = document.getElementById('gaugeChart').getContext('2d');
+    var pieChart, gaugeChart;
+
+    var empruntsMoisData = {
+        labels: [{% for emprunt in emprunts_par_mois %}'{{ emprunt.mois|date:"F Y" }}',{% endfor %}],
+        datasets: [{
+            data: [{% for emprunt in emprunts_par_mois %}{{ emprunt.total }},{% endfor %}],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 206, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(153, 102, 255)',
+                'rgb(255, 159, 64)'
+            ]
+        }]
+    };
+
+    var livresEmpruntesData = {
+        labels: [{% for livre in livres_plus_empruntes %}'{{ livre.titre_livre }}',{% endfor %}],
+        datasets: [{
+            data: [{% for livre in livres_plus_empruntes %}{{ livre.nombre_emprunts }},{% endfor %}],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 206, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(153, 102, 255)'
+            ]
+        }]
+    };
+
+    function createPieChart(data) {
+        if (pieChart) {
+            pieChart.destroy();
+        }
+        pieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Statistiques des emprunts'
+                    }
+                }
+            }
+        });
+    }
+
+    function createGaugeChart() {
+        gaugeChart = new Chart(gaugeCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [{{ total_emprunts }}, {{ total_livres }} - {{ total_emprunts }}],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 255, 255)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                circumference: 180,
+                rotation: 270,
+                cutout: '75%',
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            }
+        });
+    }
+
+    document.getElementById('chartSelector').addEventListener('change', function() {
+        if (this.value === 'empruntsMois') {
+            createPieChart(empruntsMoisData);
+        } else {
+            createPieChart(livresEmpruntesData);
+        }
+    });
+
+    createPieChart(empruntsMoisData);
+    createGaugeChart();
+</script>
+{% endblock %}
