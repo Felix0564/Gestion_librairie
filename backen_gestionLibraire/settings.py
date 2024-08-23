@@ -34,7 +34,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://gestion-librairie.onrender.com']
+ALLOWED_HOSTS = ['https://gestion-librairie.onrender.com', 'gestion-librairie.onrender.com']
 
 
 # Application definition
