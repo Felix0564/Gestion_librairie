@@ -9,7 +9,7 @@ from django.db.models.functions import TruncMonth
 from .models import Livre, Emprunt, Etudiant, RetourLivre
 from .forms import CustomUserCreationForm, EmpruntConfirmationForm, EmpruntForm
 from django.contrib.auth.forms import AuthenticationForm
-
+#ygy
 def home(request):
     if not request.user.is_authenticated:
         return redirect('login_register')
