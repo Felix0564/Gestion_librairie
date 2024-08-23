@@ -1,0 +1,13 @@
+asgiref==3.8.1
+Django==5.1
+django-bootstrap-modal-forms==3.0.4
+django-bootstrap3==24.2
+django-forms-bootstrap==3.1.0
+django-widget-tweaks==1.5.0
+djangorestframework==3.15.2
+gunicorn==23.0.0
+packaging==24.1
+psycopg2==2.9.9
+python-decouple==3.8
+sqlparse==0.5.1
+tzdata==2024.1
